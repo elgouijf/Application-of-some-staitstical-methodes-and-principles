@@ -1,0 +1,686 @@
+---
+title: "Rapport Projet PMS"
+output: html_document
+date: "2025-04-04"
+author: "EL GOUIJ Faical, DEGROS Antonin, MOUNIER Leo"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## [Partie 1. Tirage avec remise]{.underline}
+
+**Question 1**
+$$
+E(X) = \displaystyle \sum_{k=1}^{\theta}kP(X=k)= \frac{1}{\theta}\sum_{k=1}^{\theta}= \frac{1}{\theta}\frac{\theta(\theta+1)}{2}= \frac{\theta + 1}{2}.
+$$
+
+$V(X) = E((X-E(X))^2) = E(X^2) - E(X)^2.$ Par transfert :
+
+$E(X^2) = \displaystyle \sum_{k=1}^{\theta}k^2P(X=k) = \frac{1}{\theta}\frac{\theta (\theta+1)(2\theta + 1)}{6}$ par la formule de la somme des carrés.
+
+Ainsi $V(X) = \frac{(\theta+1)(2\theta+1)}{6} -\left( \frac{\theta+1}{2} \right)^2 = \frac{\theta^2-1}{12}$ après simplification.
+
+**Question 2**
+
+D'après 1, E(X) = $\phi(\theta)$ avec $\phi : t \rightarrow \frac{t+1}{2}$. Ainsi l'estimateur des moments de $\theta$ est :
+
+$$
+\tilde\theta_n = \phi^{-1}(\bar X_n) = 2\bar X_n -1  = \frac{2}{n}\displaystyle\left(\sum_{k=1}^{n}X_k\right) - 1.
+$$
+
+Il en suit alors :
+
+$$
+E(\tilde\theta_n) = \frac2n\displaystyle\sum_{k=1}^nE(X_k) -1 = 2E(X)-1=\theta.
+$$
+
+Ainsi $\tilde\theta_n$ est sans biais. On calcule maintenant sa variance :
+
+$$
+V(\tilde \theta_n) = V\left(\frac{2}{n}\displaystyle\left(\sum_{k=1}^{n}X_k\right) - 1\right) \\
+= \frac{4}{n^2}\sum_{k=1}^nV(X_k)\\
+= \frac{4V(X)}{n}
+$$
+
+Ce qui nous donne $V(\tilde\theta_n) = \frac{\theta^2-1}{3n}$ après simplifications. La variance de la somme est la somme des variances en vertu de l'indépendance des $X_k$.
+
+**Question 3**
+
+On a : $\forall x \in \mathbb R : F_X(x) = P(X \leq x) = 0$ si x \< 1, $F(x) = \displaystyle \sum_{k=1}^{\lfloor x \rfloor}P(X=k)$ si $x \in [1,\theta]$ et F(x) = 1 sinon. Finalement, on a $\forall x \in \mathbb R : F(x) = \mathbb 1_{[1,\theta]}(x) \frac{\lfloor x \rfloor}{\theta} + \mathbb 1_{]\theta,+\infty[}(x)$.
+
+La médiane de la loi de X est un réel m tel que $P(X \leq m) = P(X\geq m) = \frac12$.
+
+Si m $\not \in [1,\theta]$ on obtient soit 0 = $\frac12$ soit 1 = $\frac12$, ce qui est absurde. Ainsi m $\in [1,\theta]$. On a alors $\lfloor x \rfloor = \frac{\theta}{2}$, d'où $\frac{\theta}{2} \leq m \lt \frac{\theta}{2} + 1$. Par convention on prend le milieu de ces deux points, ce qui donne m = $\frac{\theta+1}{2}$.
+
+On en déduit $\tilde\theta_n' = 2X^*_{\frac{n+1}{2}} - 1$ si n est impair et $\tilde\theta_n' = X^*_{\frac{n}{2}} + X^*_{\frac{n}2 + 1} - 1$ sinon.
+
+**Question 4**
+
+On a $\forall x \in \mathbb R : P(X_n^* \leq x) = \displaystyle \prod_{k=1}^n P(X_k \leq x)$ par indépendance, d'où $P(X_n^* \leq x) = (F_X(x))^n.$ Pour expliciter, on a donc $F_{X_n^*}(x) = 0$ si x \< 1, $F_{X_n^*}(x) = \left( \frac{\lfloor x \rfloor}{\theta} \right)^n$ si $x \in [1,\theta]$ et $F_{X_n^*}(x) = 1$ sinon.
+
+De plus, on a $\forall k \in \left\{1,...,\theta \right\}: P(X_n^* \leq k) =\displaystyle \prod_{i=1}^n P(X_i \leq k) = P(X\leq k)^n = \left( \frac{k}{\theta} \right)^n$. On en déduit :
+
+$$
+\forall k \in \left\{2,...,\theta \right\} : P(X_n^* = k) = P(X_n^* \leq k) - P(X_n^* \leq k-1) = \frac{1}{\theta^n}(k^n - (k-1)^n).
+$$
+
+On calcule directement $P(X_n^* = 1) = \frac1{\theta^n}$, ce qui permet de conclure que la formule précédente s'applique aussi à k = 1.
+
+**Question 5**
+
+La vraisemblance des observations est, par indépendance :
+
+$$
+\mathscr L(\theta;x_1,...,x_n) = \displaystyle \prod_{i=1}^nP(X= x_i ;\theta)\\
+= \prod_{i=1}^n\frac1{\theta} \mathbb 1_{\{1,...,\theta\}}(x_i)\\
+= \frac1{\theta^n}\mathbb 1_{\{1,...,\theta\}^n}(x_1,...,x_n).
+$$
+
+Ainsi la vraissemblance est nulle si $\theta < max(x1,...,x_n)$ et vaut $\frac1{\theta^n}$ sinon. Son maximum est donc atteint pour $\theta = max(x_1,...,x_n) = x_n^*$, d'où l'EMV $\hat \theta_n = X_n^*$. De plus :
+
+$$
+E(\hat{\theta}_n) = E(X_n^*) = \sum_{k=1}^{\theta} k P(X_n^* = k)\\
+= \sum_{k=1}^{\theta} k \left( \left(\frac{k}{\theta} \right)^n - \left(\frac{k-1}{\theta} \right)^n \right)
+\\
+= \frac{1}{\theta^n} \left( \sum_{k=1}^{\theta} k^{n+1} - \sum_{k=1}^{\theta} (k-1)^{n+1} - \sum_{k=1}^{\theta} (k-1)^n \right)
+\\
+= \frac{1}{\theta^n} \left( \theta^{n+1} + \sum_{k=1}^{\theta} (k-1)^{n+1} - \sum_{k=1}^{\theta} (k-1)^n \right)
+\\
+= \theta + \frac{1}{\theta^n} \left( \sum_{k=1}^{n} (k-1)^n \right)
+\\
+\neq \theta
+$$
+
+Donc l'estimateur est biaisé.
+
+**Question 6**
+
+Grâce au calcul précédent de la fonction de répartition de X, on peut déduire la relation : $\forall x \in [1,\theta] : F_X(x) = \frac1{\theta}\lfloor x \rfloor + 0$. On peut donc tracer le graphe de probabilités $(x_i^*,\frac{i}{n}), i \in \{1,...,n\}$ (les $x_i$ sont entiers donc pas besoin de leur appliquer la partie entière). Ainsi d'après la relation précédente, $\theta_g$ est la pente de la droite extrapolée par la disposition du nuage de points obtenu. La pente globale est calculée en prenant en compte les points extrêmes de la courbe, quon calcule avec R dans les questions suivantes.
+
+**Question 7**
+
+```{r}
+
+theta <- 1000
+n <- 100
+échantillon <- sample(1:theta, n, replace = TRUE)
+# L'histogramme
+hist(échantillon,col= "blue", main = "Histogramme d'une loi uniforme discrète", xlab = "Valeurs", ylab= "Effectif")
+
+#Définition des estimateurs 
+moments <- 2 * mean(échantillon) - 1
+mediane <- 2 * median(échantillon) - 1
+max_vrais <- max(échantillon)
+
+#Etimateur θ_g; Graphe de Probabilité
+
+échantillon_trie = sort(échantillon)
+quantiles = (1:n)/(n+1)
+plot(quantiles, échantillon_trie, col = "red",main = "Graphe de probabilités", lwd = 2,xlab = "les valeurs dans l'échantillon", ylab = "i/n: quantiles empiriques")
+
+regression_lineaire <- lm(échantillon_trie ~ quantiles)
+abline(regression_lineaire, col= "blue")
+
+pente <- coef(regression_lineaire)[2]  #obtenir la pente avec regression linéaire
+theta_g = 1/pente
+theta_g
+
+
+theta_chap <- (max_vrais^(n + 1) - (max_vrais - 1)^(n + 1)) / (max_vrais^n - (max_vrais - 1)^n)
+
+cat("Estimateur des moments:", moments, "\n")
+cat("Estimateur basé sur la médiane:", mediane, "\n")
+cat("Estimateur du maximum de vraisemblance:", max_vrais, "\n")
+cat("Estimateur graphique:", theta_g, "\n")
+cat("Estimateur sans biais et de variance minimale:", theta_chap, "\n")
+```
+
+Conclusion: $\check{\theta}_n$ est le meilleur estimateur et le plus proche de $\theta$ .
+
+**Question 8**
+
+```{r}
+n <- 1000
+for (m in 1:1000)
+{
+  échantillon <- sample(1:n,theta,replace=TRUE)
+  
+  
+  #Définition des estimateurs 
+  append(moments,2 * mean(échantillon) - 1)
+  append(mediane,2 * median(échantillon) - 1)
+  append(max_vrais,max(échantillon))
+  append(theta_g,max(échantillon) + min(échantillon) - 1)
+  append(theta_chap,(max_vrais^(n + 1) - (max_vrais - 1)^(n + 1)) / (max_vrais^n - (max_vrais - 1)^n))
+  
+}
+
+
+# Les Biais
+cat ("biais_moments :",mean(moments) - theta, "\n")
+cat("biais_mediane : ",  mean(mediane) - theta,"\n")
+cat("biais_max_vrais : ", mean(max_vrais) - theta,"\n")
+cat("biais_g : ", mean(theta_g) - theta,"\n")
+cat("biais_chap : ", mean(theta_chap) - theta,"\n\n")
+
+# Les erreurs quadratiques moyennes
+cat("errure_moments : ",mean(((moments)-mean(moments))^2)+ (mean(moments) - theta)^2,"\n")
+cat("Erreure_médiane : ",mean(((mediane)-mean(mediane))^2)+(mean(mediane) - theta)^2,"\n")
+cat("erreure_max_vrais : ",mean(((max_vrais)-mean(max_vrais))^2)+ (mean(max_vrais) - theta)^2,"\n")
+cat("errure_g : ",mean(((theta_g)-mean(theta_g))^2)+(mean(theta_g) - theta)^2,"\n")
+cat("erreure_chap : ",mean(((theta_g)-mean(theta_g))^2) + (mean(max_vrais) - theta)^2,"\n") 
+```
+On remarque que plus on augmente n, plus le biais et l'erreur quadratique moyenne tendent vers 0 pour tous les estimateurs .
+
+**Question 9** 
+
+Par le **Théorème Central Limite**, on a :
+\[
+\sqrt{n} \left( \frac{\overline{X}_n - \mathbb{E}[X]}{\sigma} \right) \xrightarrow{d} \mathcal{N}(0,1)
+\]
+donc:
+---
+
+
+\[
+\sqrt{3n} \frac{\tilde{\theta}_n - \theta}{\sqrt{\theta^2 - 1}} \overset{d}{\to} \mathcal{N}(0,1)
+\]
+
+avec $\tilde{\theta}_n = 2\overline{X}_n - 1$ 
+
+\[
+P\left(\left|\sqrt{3n} \frac{\tilde{\theta}_n - \theta}{\sqrt{\theta^2 - 1}}\right| \leq u_\alpha\right) \approx 1-\alpha
+\]
+
+les deux racines de l'inégalité $\theta$ :
+
+\[
+(3n - u_\alpha^2)\theta^2 - 6n\tilde{\theta}_n\theta + (3n\tilde{\theta}_n^2 + u_\alpha^2) \leq 0
+\]
+
+
+sont les bornes de l’intervalle de confiance , donc asymptotiquement on a:
+
+
+\[
+I_n = \left[ \tilde{\theta}_n - u_\alpha \frac{\sqrt{\tilde{\theta}_n^2 - 1}}{\sqrt{3n}},\ \tilde{\theta}_n + u_\alpha \frac{\sqrt{\tilde{\theta}_n^2 - 1}}{\sqrt{3n}} \right]
+\]
+
+
+
+
+```{r}
+theta <- 1000
+n <- 100
+échantillon <- sample(1:theta, n)
+
+
+moments <- 2 * mean(échantillon) - 1
+alpha <- 0.05
+u_alpha <- qnorm(1 - alpha)
+
+# Intervalle de confiance
+borne_inf <- moments - u_alpha* sqrt(((moments)**2 -1)/ (3*n))
+borne_sup <- moments + u_alpha* sqrt(((moments)**2 -1)/ (3*n))
+
+cat("Intervalle de confiance à 95% : [", borne_inf, ",", borne_sup, "]")
+```
+
+
+**Question 10**
+
+```{r}
+# Fonction pour calculer l'intervalle de confiance
+Intervalle <- function(x, alpha = 0.05) {
+  n <- length(x)
+  moments <- 2 * mean(x) - 1
+  u_alpha <- qnorm(1 - alpha)
+  borne_inf <- moments - u_alpha* sqrt(((moments)**2 -1)/ (3*n))
+  borne_sup <- moments + u_alpha* sqrt(((moments)**2 -1)/ (3*n))
+  return(c(borne_inf, borne_sup))
+}
+
+# Simulation
+n_values <- c(100, 1000)
+m <- 1000
+alpha <- 0.05
+
+resultats <- sapply(n_values, function(n) {
+  capture <- mean(replicate(m, {
+    x <- sample(1:1000, n, replace = TRUE)
+    Intervalle_costum <- Intervalle(x, alpha)
+    1000 >= Intervalle_costum[1] & 1000 <= Intervalle_costum[2]
+  }))
+  return(c(n = n, taux = capture))
+})
+
+cat("Taux de couverture pour n=10 :", resultats["taux", 1]*100, "%\n")
+cat("Taux de couverture pour n=1000 :", resultats["taux", 2]*100,  "%")
+
+theta_vrai <- 1000
+n <- 30      
+m <- 1000   
+
+# Valeurs de alpha
+alpha_values <- c(0.01, 0.05, 0.10, 0.20, 0.30)
+
+# Simulation pour différents seuils
+resultats <- sapply(alpha_values, function(alpha) {
+  capture <- mean(replicate(m, {
+    x <- sample(1:theta_vrai, n, replace = TRUE)
+    Intervalle_costum <- Intervalle(x, alpha)
+    theta_vrai >= Intervalle_costum[1] & theta_vrai <= Intervalle_costum[2]
+  }))
+  return(c(alpha = alpha, taux = capture))
+})
+
+
+resultats_df <- as.data.frame(t(resultats))
+colnames(resultats_df) <- c("alpha", "taux_couverture")
+
+# Affichage des résultats
+print(resultats_df)
+
+```
+
+
+conclusion: plus $\alpha$ est petit, plus le taux de couverture s'approche de 1.
+
+
+## [Partie 2. Tirage sans remise]{.underline}
+
+**Question 1**
+
+Soit \( X_n \sim \mathcal{U}([|1,\theta|]\), alors pour tout \( k \in \mathbb{N} \), nous avons :
+\[
+P(X_1 = k, \theta) = \frac{1}{\theta} \mathbf{1}_{[|1,\theta|]}(k)
+\]
+
+Ensuite, sachant \( X_1 = x_1 \), on a :
+\[
+X_2 | X_1 = x_1 \sim \mathcal{U}([|1,\theta|] - \{x_1\}),
+\]
+ce qui implique que :
+\[
+P(X_2 = k | X_1 = x_1, \theta) = \frac{\mathbf{1}_{[|1,\theta|] - \{x_1\}}(k)}{\theta - 1}
+\]
+
+De même, en poursuivant le raisonnement :
+\[
+X_3 | (X_1 = x_1) \cap (X_2 = x_2) \sim \mathcal{U}([|1,\theta|] - \{x_1, x_2\}),
+\]
+et :
+\[
+P(X_3 = k | (X_1 = x_1) \cap (X_2 = x_2), \theta) = \frac{\mathbf{1}_{[|1,\theta|] - \{x_1, x_2\}}(k)}{\theta - 2}
+\]
+
+Par généralisation, on obtient :
+\[
+X_i | \bigcap_{j=1}^{i-1} (X_j = x_j) \sim \mathcal{U}([|1,\theta|] - \{x_1, \dots, x_{i-1}\}),
+\]
+et :
+\[
+P(X_i = x_i | \bigcap_{j=1}^{i-1} (X_j = x_j)) = \frac{\mathbf{1}_{[|1,\theta|] - \{x_1, \dots, x_{i-1}\}}(x_i)}{\theta - (i-1)}
+\]
+
+
+**Question 2**
+
+
+\[
+\mathcal{L}(\theta \mid x_1, \dots, x_n) 
+= P(X_1 = x_1 \mid \theta) \prod_{i=2}^{n} P\left(X_i = x_i \mid \bigcap_{j=1}^{i-1} X_j = x_j, \theta\right)
+\]
+
+\[
+= \frac{\mathbf{1}_{ [|1, \theta|]}(x_1)}{\theta} 
+\prod_{i=2}^{n} \frac{\mathbf{1}{[|1, \theta|] \setminus \{x_1, \dots, x{i-1}\}}(x_i)}{\theta - (i - 1)}
+\]
+
+\[
+= \frac{\mathbf{1}_{[|1, \theta|]}(x_1) 
+\prod_{i=2}^{n} \mathbf{1}{[|1, \theta|] \setminus \{x_1, \dots, x{i-1}\}}(x_i)}{\theta(\theta - 1)\cdots(\theta - (n-1))}
+\]
+
+\[
+= \frac{(\theta - n)!}{\theta!} 
+\mathbf{1}_{[|1, \theta|]}(x_1) 
+\prod_{i=2}^{n} \mathbf{1}_{[|1, \theta|] \setminus \{x_1, \dots, x{i-1}\}}(x_i)
+\]
+
+\[
+= \frac{(\theta - n)!}{\theta!} \mathbf{1}_{[x_n^*, +\infty[;}(\theta)
+\]
+
+En effet :
+
+Si $\exists i \in \{x_1, \dots, x_n\}$ tel que $x_i \notin [1,\theta] - \{x_1, \dots, x_{i-1}\}$, 
+soit $i_0 = \min \{ i \in [1,n] \mid x_i \notin [1,\theta] - \{x_1, \dots, x_{i-1}\} \}$.
+
+Donc $\forall j < i_0$, $x_j \in [1,\theta] - \{x_1, \dots, x_{j-1}\}$, 
+
+ce qui donne par récurrence ($x_j\leq \theta$) :
+
+car $x_{1} \in [1,\theta] \Rightarrow$ pour tout 
+$x \in [|1,\theta|] - {x_1}$ ona $x \leq \theta$
+
+
+Donc $x_{i_0} > \theta$ (car le tirage est sans remise, i.e. $x_{i_0} \neq x_j, \forall j < i_0$ et $x_j \notin [1,\theta]$)
+
+\[
+\mathbf{1}{[x^*_{n},+\infty[}(\theta) = 0 \quad \text{(car $x{i_0} \leq x_n^*$)}
+\]
+
+Inversement, si $\theta \leq x_{n}^*$, donc si on pose $i_0$ tel que $x_n^ = x_{i_0}$, alors $x_{i_0} > \theta$
+
+\[
+\Rightarrow x_{i_0} \notin [1,\theta] - \{x_1, \dots, x_{i_0 -1} \} \quad \text{(par inclusion)}
+\]
+
+\[
+\Rightarrow \mathbb{1}_{[1,\theta]} (x_1) \prod{i=2}^{n} \mathbb{1}_{[1,\theta] - \{x_1, \dots, x{i-1}\}} (x_i) = 0
+\]
+
+\[
+\Rightarrow \mathbb{1}_{[1,\theta]} (x_1) \prod{i=2}^{n} \mathbf{1}_{[1,\theta] - \{x_1, \dots, x{i-1}\}} (x_i) = 0
+\]
+
+Donc pour que $\mathcal{L}$ soit strictement positive et minimale, il faut que $\theta = x_n^*$.
+
+Ainsi : \[\hat{\theta}_n = X^*_{n}\]
+
+
+**Question 3**
+```{r}
+#les tailles d'échantillons
+n_values <- seq(10, 100, by=10)  
+theta = 1000  # Paramètre
+
+# Initialisation des vecteurs de stockage des moyennes et erreurs quadratiques
+moyenne_1 = numeric(length(n_values))
+moyenne_2 = numeric(length(n_values))
+moyenne_3 = numeric(length(n_values))
+moyenne_4 = numeric(length(n_values))
+
+erreur_1 = numeric(length(n_values))
+erreur_2 = numeric(length(n_values))
+erreur_3 = numeric(length(n_values))
+erreur_4 = numeric(length(n_values))
+
+# On tente plusieurs taille d'échantillon
+for (j in seq_along(n_values)) {
+    n = n_values[j]  # Taille de l'échantillon
+    
+    # Initialisations des vecteurs d'estimation
+    theta_n = numeric(1000)
+    theta_n_1 = numeric(1000)
+    theta_n_2 = numeric(1000)
+    theta_n_6 = numeric(1000)
+
+    # Boucle des 1000 simulations
+    for (i in 1:1000) {
+        echantillon = sample(1:theta, n, replace=FALSE)  # Échantillon sans remise
+        Xmax = max(echantillon)  
+        Xmin = min(echantillon)  
+
+        # Calcul des estimateurs
+        theta_n[i] = Xmax
+        theta_n_1[i] = (((n + 1) / n) * Xmax) - 1
+        theta_n_2[i] = Xmax + Xmin - 1
+        theta_n_6[i] = ((Xmax^(n + 1)) - ((Xmax - 1)^(n + 1))) / ((Xmax^n) - ((Xmax - 1)^n))
+    }
+
+    # calcul des moyennes
+    moyenne_1[j] = mean(theta_n)
+    moyenne_2[j] = mean(theta_n_1)
+    moyenne_3[j] = mean(theta_n_2)
+    moyenne_4[j] = mean(theta_n_6)
+
+    # Calcul des erreurs quadratiques
+    erreur_1[j] = var(theta_n) + (moyenne_1[j] - theta)^2
+    erreur_2[j] = var(theta_n_1) + (moyenne_2[j] - theta)^2
+    erreur_3[j] = var(theta_n_2) + (moyenne_3[j] - theta)^2
+    erreur_4[j] = var(theta_n_6) + (moyenne_4[j] - theta)^2
+}
+
+# --- Affichage des résultats ---
+par(mfrow=c(2,1), mar=c(2,2,1,1))
+
+
+
+# Graphe des moyennes des estimateurs
+plot(n_values, moyenne_1, type='o', col='red', pch=19, cex=0.8, lwd=2, 
+     xlab='Taille de l’échantillon n', ylab='Moyenne des estimateurs', main='Évolution des moyennes',
+     ylim=c(min(c(moyenne_1, moyenne_2, moyenne_3, moyenne_4)), max(c(moyenne_1, moyenne_2, moyenne_3, moyenne_4))))
+lines(n_values, moyenne_2, type='o', col='blue', pch=19, cex=0.8, lwd=2)
+lines(n_values, moyenne_3, type='o', col='green', pch=19, cex=0.8, lwd=2)
+lines(n_values, moyenne_4, type='o', col='purple', pch=19, cex=0.8, lwd=2)
+
+legend("bottomright", legend=c("theta_n", "theta_n_1", "theta_n_2", "theta_n_6"), 
+       col=c("red", "blue", "green", "purple"), lty=1, pch=19, cex=0.8)
+
+# Graphe des erreurs quadratiques
+plot(n_values, erreur_1, type='o', col='red', pch=19, cex=0.8, lwd=2,
+     xlab='Taille de l’échantillon n', ylab='Erreur quadratique', main='Évolution de l’erreur quadratique',
+     ylim=c(min(c(erreur_1, erreur_2, erreur_3, erreur_4)), max(c(erreur_1, erreur_2, erreur_3, erreur_4))))
+lines(n_values, erreur_2, type='o', col='blue', pch=19, cex=0.8, lwd=1)
+lines(n_values, erreur_3, type='o', col='green', pch=19, cex=0.8, lwd=1)
+lines(n_values, erreur_4, type='o', col='purple', pch=19, cex=0.8, lwd=1)
+
+legend("topright", legend=c("theta_n", "theta_n_1", "theta_n_2", "theta_n_6"), 
+       col=c("red", "blue", "green", "purple"), lty=1, pch=19, cex= 0.8)
+
+
+
+par(mfrow=c(1,1))
+
+```
+
+
+**Question 4**
+
+L'estimateur $\check{\theta}_n$ admet une erreur trop importante par rapport à celle de $\hat{\theta}^{(2)}_n$ pour des petites tailles d'échantillon , mais les deux convergent pour lorque n croit, et les deux s'approche du paramètre en espérance, le modèle avec remise est suffisant sous disposition d'un nombre de données important.
+En général le modèle avec remise ne suffit pas toujours.
+ 
+
+
+ 
+## [Partie 3. Estimation du nombre d’iPhones 3G produits]{.underline}
+
+
+**Question 1**
+
+```{r}
+iPhones <-read.table("iPhones.csv", sep=";", header=T)
+
+# Définition de vecteurs contenant respectivement les codes TAC et les numéro TAC
+
+codes_TAC  <- c(161200, 161300, 161400, 171200, 171300, 171400, 174200, 174300, 174400, 177100, 177300, 177400, 177500, 177600, 180900)
+numeros_TAC <- 1:length(codes_TAC)
+
+# Définition d'un dictionnaire faisant le lien entre code TAC et numéro TAC
+
+dictionnaire_TAC  <- setNames(numeros_TAC,codes_TAC)
+
+NS_list  <- c()
+
+# Boucle et traitement sur tous les iPhones
+
+for (iPhone in iPhones$IMEI) { 
+  tac_nb <- dictionnaire_TAC[substring(iPhone,3,8)]
+  NS_list <- c(NS_list,(as.numeric(tac_nb)-1)*(10^6)+as.numeric(substring(iPhone,9,13))*10)
+}
+```
+
+**Question 2**
+
+Nous avons vu dans l'exercice précédant qu'un estimateur non biaisé pour un problème similaire à celui des chars d'assaut allemands est le suivant :
+
+$\hat{\theta}_{corrigé}=\frac{n+1}{n}\times X^*+1$
+
+Avec $X^*$ la valeur maximale des données observées
+
+On a donc :
+
+```{r}
+# Trouver la valeur maximale des numéros de série
+NS_max <- max(NS_list)
+
+# Nombre total d'observations n
+n <- length(NS_list)
+
+# Estimateur du nombre total d'iPhones produits
+theta <- ((n+1)/n) * NS_max - 1
+
+print(paste("Estimation du nombre total d'iPhones produits :", round(theta)))
+```
+
+**Question 3**
+
+```{r}
+par(mfrow=c(1,2))
+
+# Premier histogramme : à pas fixe
+hist(NS_list, 
+     main="Histogramme à pas fixe", 
+     col="blue", 
+     xlab="Numéro de série", 
+     probability=TRUE)
+
+# Densité de la loi uniforme
+curve(dunif(x, min(NS_list), max(NS_list)), 
+      add=TRUE, col="red", lwd=2)
+
+# Deuxième histogramme : effectifs égaux (quantiles)
+nb_classes <- 8
+breaks_quantiles <- quantile(NS_list, probs = seq(0, 1, length.out = nb_classes + 1))
+
+hist(NS_list, 
+     breaks = breaks_quantiles, 
+     main = "Histogramme à effectif égal par classe",
+     xlab = "Numéro de série NS",
+     ylab = "Densité",
+     col = "blue", 
+     border = "black", 
+     probability=TRUE,
+     include.lowest = TRUE)
+```
+
+En observant les deux histogrammes précédant, on voit bien que l'hypothèse d'uniformité des numéros de série sur la période 2008-2009 n'est pas respectée.
+
+**Question 4**
+
+On peut estimer le nombre d'iPhones produits sur chacune de ces sous-périodes en calculant l'estimateur trouvé pour l'exercice des chars allemands sans remise pour chaque période.\
+Il faut toutefois faire attention à plusieurs points :\
+- Les numéros de séries ne recommencent pas à 0 à chaque période\
+- Le minimum/maximum du numéro de série d'une période n'est pas très représentatif puisqu'il n'y a pas eu d'observations de tous les iPhones d'une période.\
+On peut se rapprocher de la réalité et tenter de résoudre le deuxième point en ajustant les numéros de série en calculant la médiane entre le max de la période précédante et le min de la période actuelle
+
+```{r}
+# Il y a 8 périodes de 4 semaines entre la semaine 25 de 2008 et la semaine 4 de 2009
+nb_periodes = 8
+periodes <- vector("list",nb_periodes)
+
+# On parcourt tous les iPhones
+for (i in 1:nrow(iPhones)) {
+  pc_code <- as.character(iPhones$PC[i])
+  ns <- NS_list[i]
+  # On récupère le chiffre correspondant à l'année
+  annee <- as.numeric(substring(pc_code, 3, 3))
+  # On récupère le nombre correspondant à la semaine
+  semaine <- as.numeric(substring(pc_code, 4, 5))
+  # On récupère l'indice de la période par un calcul simple
+  if (annee == 8){
+    periode <- ceiling((semaine - 24) / 4)
+  } else if (annee == 9) {
+    periode <- 7 + ceiling(semaine / 4)
+  }
+  # On ajoute le numéro de série correspondant dans la bonne période
+  periodes[[periode]] <- c(periodes[[periode]], ns)
+}
+
+# On calcul maintenant les estimateurs mois par mois et le nombre de téléphone produit théorique.
+
+# On initialise des tableaux pour les numéros de séries min et max
+ns_min_adj <- c()
+ns_max_adj <- c()
+
+# On parcourt les périodes pour trouver les bornes des numéros de séries par périodes
+for (k in 1:nb_periodes){
+  # On définit le minimum du numéro de série pour la période de lancement comme étant 0
+  if (k == 1){
+    ns_min <- 0
+  } else {
+    # Sinon, on ajuste le minimum à la médiane entre le minimum observé et le maximum observé précédant
+    ns_min_prev <- max(periodes[[k-1]])
+    ns_min <- floor((min(periodes[[k]]) + ns_min_prev) / 2)
+  }
+  # On définit le maximum du numéro de série pour la dernière période comme étant le maximum observé
+  if (k == nb_periodes) {
+    ns_max <- max(periodes[[k]])
+  } else {
+      # Sinon, on ajuste le maximum à la médiane entre le maximum observé avec le minimum observé suivant
+    ns_max_next <- min(periodes[[k+1]])
+    ns_max <- ceiling((max(periodes[[k]]) + ns_max_next) / 2)
+  }
+  # On ajoute nos valeurs dans nos tableaux de numéros de séries ajustés
+  ns_min_adj <- c(ns_min_adj, ns_min)
+  ns_max_adj <- c(ns_max_adj, ns_max)
+}
+
+# On initialise un tableau pour les estimateurs par mois
+estimateurs_mois <- c()
+
+# On parcourt à nouveau les périodes pour calculer les estimateurs
+for (k in 1:nb_periodes) {
+  # On récupère le nombre d'iPhones de la période ainsi que les numéros de série minmum et maximum ajustés
+  n = length(periodes[[k]])
+  ns_min <- ns_min_adj[k]
+  ns_max <- ns_max_adj[k]
+  # On calcule l'estimateur du mois
+  estimateur_mois = round(((n+1)/n)*(ns_max - ns_min) - 1)
+  # On l'ajoute au tableau des estimateurs
+  estimateurs_mois <- c(estimateurs_mois,estimateur_mois)
+}
+
+resultats <- data.frame(
+  Période = paste("Période", 1:length(estimateurs_mois)),   # Formater l'indice comme "Période 1", "Période 2", etc.
+  Estimation = round(estimateurs_mois, 2)                   # Les estimations arrondies à 2 décimales
+)
+
+# Afficher le tableau
+print(resultats)
+print(paste("Estimation du nombre total d'iPhones produit : ", sum(estimateurs_mois)))
+```
+
+**Question 5**
+
+On peut tracer un graphique nous permettant d'observer la variation de la production par période.
+
+```{r}
+# Création du graphe
+barplot(estimateurs_mois, names.arg = 1:length(estimateurs_mois), col = "blue", 
+        xlab = "Période", ylab = "Estimation nombre iPhones", main = "Graphique des estimations de production")
+```
+
+On voit que la production n'est pas uniforme par période d'après les estimations effectuées et que l'estimation totale est plus élevée que lorsque l'on avait effectuée cette dernière sur toute la période.\
+On peut toutefois remettre en question les calculs effectués pour les raisons suivantes :\
+- La taille de l'échantillon est assez faible (139 pour une production totale estimée à environ 15 millions d'exemplaires).\
+- Les estimations reposent sur l'étude des numéros de séries sur lesquels il ne semble pas y avoir d'uniformité.\
+- Certains mois ont peu d'observations comme en témoignent le graphique suivant, ce qui rend peu fiable les estimations.\
+
+```{r}
+# Création d'un tableau contenant le nombre de réponses par période
+nb_rep_periode <- sapply(periodes,length)
+# Création du graphe
+barplot(nb_rep_periode, names.arg = 1:nb_periodes, col = "blue", 
+        xlab = "Période", ylab = "Nombre de réponses", main = "Graphique du nombre de réponse par période")
+```
+
+En conclusion, les estimations semblent relativement proche de la réalité mais ne peuvent pas être utilisées de manière fiable à cause d'un certain nombre d'hypothèses n'étant pas valides (taille de l'échantillon, uniformité des numéros de séries et uniformité de la répartition des réponses dans le temps).
+
+
