@@ -1,2 +1,5 @@
-# Application-of-some-staitstical-methodes-and-principles
-This math project was part of the "Principes et méthodes statistiques" ("Statistical Methods and Principles") course, aimed at applying and strengthening the statistical tools we learned using R.
+# In English:
+This math project is divided into two parts: “The German Tanks Problem” (Le problème des chars d’assaut allemands) and “An Estimation of the Number of 3G iPhones Produced” (Estimation du nombre d’iPhones 3G produits). Both required a statistical analysis, which I conducted with two other contributors using tools we learned in class. The course book is available in the repository under the name PMS.pdf. We were encouraged to use R for its data handling and analysis capabilities, after having worked with it in smaller prior projects.
+
+# In French:
+Ce projet mathématique est divisé en deux parties : « Le problème des chars d’assaut allemands » (The German Tanks Problem) et « Estimation du nombre d’iPhones 3G produits » (An Estimation of the Number of 3G iPhones Produced). Les deux ont nécessité une étude statistique que j’ai réalisée avec deux autres contributeurs à l’aide des outils appris en cours. Le livre du cours est disponible dans le dépôt sous le nom PMS.pdf. L'utilisation de R nous a été suggérée pour ses capacités de gestion et d’analyse de données, après l’avoir expérimenté dans des projets plus petits.
